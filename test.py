@@ -3,6 +3,11 @@ import cv2
 import math
 print(cv2.__version__)
 cap = cv2.VideoCapture('RoadAccidents024_x264.mp4')
+length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+frame_per_seg = int(length/32)
+print( frame_per_seg)
+print( length )
+
 
 # params for ShiTomasi corner detection
 feature_params = dict( maxCorners = 100,
@@ -25,7 +30,9 @@ p0 = cv2.goodFeaturesToTrack(old_gray, mask = None, **feature_params)
 
 # Create a mask image for drawing purposes
 mask = np.zeros_like(old_frame)
+L2_distance_seg = 0
 L2_distance_list = []
+j = 0
 while(1):
     ret,frame = cap.read()
     frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -49,7 +56,14 @@ while(1):
         mask = cv2.line(mask, (a,b),(c,d), color[i].tolist(), 2)
         frame = cv2.circle(frame, (a,b),5,color[i].tolist(),-1)
     img = cv2.add(frame,mask)
-    print(L2_distance)
+    #print(L2_distance)
+    L2_distance_seg += L2_distance
+    j += 1
+    if j >= frame_per_seg:
+        j = 0
+        L2_distance_seg = (L2_distance_seg/32)
+        print(L2_distance_seg)
+        L2_distance_list.append(L2_distance_seg)
     cv2.imshow('frame',img)
     k = cv2.waitKey(30) & 0xff
     if k == 27:
@@ -58,6 +72,6 @@ while(1):
     # Now update the previous frame and previous points
     old_gray = frame_gray.copy()
     p0 = good_new.reshape(-1,1,2)
-
+print(L2_distance_list)
 cv2.destroyAllWindows()
 cap.release()
