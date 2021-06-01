@@ -1,0 +1,6 @@
+Training_Normal_Videos_Anomaly/Normal_Videos838_x264.mp4 3684
+Robbery/Robbery074_x264.mp4 784
+Training_Normal_Videos_Anomaly/Normal_Videos813_x264.mp4
+
+
+python all.py --VIDEO_DIR C:\deep\Pytorch_C3D_Feature_Extractor\videos --VIDEO_LIST_DIR C:\deep\Pytorch_C3D_Feature_Extractor\Train_Annotation.txt --OUTPUT_DIR C:\deep\Pytorch_C3D_Feature_Extractor\optical_features
